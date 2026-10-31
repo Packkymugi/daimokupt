@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>สะสมดาวสวดมนต์ไดโมขุ 🌟</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    :root {
+      --primary: #ff6b81;
+      --primary-hover: #ff4757;
+      --bg: #fff5f6;
+      --card-bg: #ffffff;
+      --text: #2f3542;
+      --accent: #ffa502;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Kanit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      color: white;
+      padding: 30px 20px 40px;
+      text-align: center;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 8px 20px rgba(255, 117, 140, 0.3);
+    }
+    header h1 {
+      font-family: 'Fredoka', 'Kanit', sans-serif;
+      font-size: 1.8rem;
+      margin: 0;
+    }
+    header p { margin: 6px 0 0; opacity: 0.95; font-size: 0.95rem; }
+    main { max-width: 480px; margin: -25px auto 40px; padding: 0 16px; }
+    section {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+    h2 { font-size: 1.3rem; margin: 0 0 12px; color: #ff4757; }
+    .muted { color: #747d8c; font-size: 0.9rem; }
+    .hidden { display: none; }
+    .field { margin: 18px 0; }
+    label { display: block; font-weight: 500; margin-bottom: 6px; }
+    input, select, textarea {
+      width: 100%;
+      border: 2px solid #ffe0e6;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      color: var(--text);
+      background: #fffafa;
+      transition: all 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #fff;
+    }
+    button, .button {
+      display: block;
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ff6b81 0%, #ff4757 100%);
+      color: white;
+      padding: 14px 18px;
+      font: 600 1.1rem 'Kanit', sans-serif;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(255, 71, 87, 0.35);
+      transition: transform 0.1s;
+    }
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.6; cursor: wait; }
+    .secondary {
+      background: #f1f2f6;
+      color: #57606f;
+      box-shadow: none;
+      margin-top: 10px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0 20px;
+    }
+    .stat {
+      background: linear-gradient(135deg, #fff9e6 0%, #ffecb3 100%);
+      border-radius: 18px;
+      padding: 14px;
+      text-align: center;
+      border: 2px solid #ffe082;
+    }
+    .stat small { color: #b7791f; display: block; font-size: 0.85rem; }
+    .stat strong { font-size: 1.6rem; color: #d68910; font-family: 'Fredoka', sans-serif; }
+    
+    .quick-minutes {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .btn-quick {
+      background: #ffeaa7;
+      color: #d63031;
+      border: 1px solid #fdcb6e;
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      box-shadow: none;
+    }
+
+    .message {
+      margin: 0 0 16px;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+    }
+    .error { background: #ff7875; color: white; }
+    .success { background: #2ed573; color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>✨ บันทึกยอดไดโมขุ ✨</h1>
+    <p>มาสะสมพลังแห่งความสุขกันทุกวันน้าา 🌈</p>
+  </header>
+  <main>
+    <div id="message" class="message hidden" role="status"></div>
+
+    <section id="loading">
+      <h2>กำลังเชื่อมต่อ LINE… 🐾</h2>
+      <p class="muted">รอเพื่อนๆ แป๊บนึงน้า...</p>
+    </section>
+
+    <section id="register" class="hidden">
+      <h2>ขั้นตอน · สมัครสมาชิกตัวน้อย 📝</h2>
+      <p class="muted">กรอกข้อมูลครั้งเดียวเท่านั้นนะจ๊ะ</p>
+      <form id="profileForm">
+        <div class="field"><label for="nickname">ชื่อเล่น 🐥</label><input id="nickname" name="nickname" maxlength="80" placeholder="เช่น น้องมีนา" required autocomplete="nickname"></div>
+        <div class="field"><label for="fullname">ชื่อจริง-นามสกุล 🌺</label><input id="fullname" name="fullname" maxlength="160" placeholder="เช่น เด็กหญิง มีนา สุขใจ" required autocomplete="name"></div>
+        <div class="field"><label for="phone">เบอร์โทรศัพท์ผู้ปกครอง 📱</label><input id="phone" name="phone" type="tel" inputmode="tel" maxlength="30" placeholder="0812345678" required autocomplete="tel"></div>
+        <div class="field">
+          <label for="area">พื้นที่ 🏡</label>
+          <select id="area" name="area" required>
+            <option value="">-- เลือกพื้นที่ --</option>
+            <option>เขตปทุมธานี</option>
+            <option>เขตธัญบุรี</option>
+            <option>เขตคลองหลวง</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="group">ฝ่าย 🎈</label>
+          <select id="group" name="group" required>
+            <option value="">-- เลือกฝ่าย --</option>
+            <option>มิไรบุชาย</option>
+            <option>มิไรบุหญิง</option>
+          </select>
+        </div>
+        <div class="field"><label for="note">เป้าหมาย / หมายเหตุ 🎯</label><textarea id="note" name="note" maxlength="500" placeholder="เช่น สวดมนต์ขอให้สอบผ่าน/ตั้งใจเรียน"></textarea></div>
+        <button type="submit">🚀 เริ่มต้นสะสมยอดสวดมนต์</button>
+      </form>
+    </section>
+
+    <section id="record" class="hidden">
+      <h2 id="welcome">สวัสดีจ้า ☀️</h2>
+      
+      <div class="stats">
+        <div class="stat"><small>สัปดาห์นี้สวดไป ⭐️</small><strong id="week">0</strong> นาที</div>
+        <div class="stat"><small>เดือนนี้สวดไป 🌟</small><strong id="month">0</strong> นาที</div>
+      </div>
+
+      <form id="logForm">
+        <div class="field">
+          <label for="period">ช่วงเวลาสวดมนต์ ⏰</label>
+          <select id="period" required>
+            <option value="">-- เลือกช่วงเวลา --</option>
+            <option value="morning">☀️ สวดมนต์เช้า</option>
+            <option value="evening">🌙 สวดมนต์เย็น</option>
+          </select>
+        </div>
+        
+        <div class="field hidden" id="morningRow">
+          <label style="font-weight:400;"><input id="includeMorning" type="checkbox"> รวบยอดช่วงเช้าที่ยังไม่ได้ลงบันทึกด้วย ☀️</label>
+        </div>
+
+        <div class="field">
+          <label for="minutes">จำนวนนาทีที่สวด ⏱️</label>
+          <input id="minutes" type="number" min="1" max="1440" step="1" placeholder="กรอกจำนวนนาที" required inputmode="numeric">
+          
+          <div class="quick-minutes">
+            <button type="button" class="btn-quick" onclick="document.getElementById('minutes').value=5">+5 นาที</button>
+            <button type="button" class="btn-quick" onclick="document.getElementById('minutes').value=15">+15 นาที</button>
+            <button type="button" class="btn-quick" onclick="document.getElementById('minutes').value=30">+30 นาที</button>
+            <button type="button" class="btn-quick" onclick="document.getElementById('minutes').value=60">+60 นาที</button>
+          </div>
+        </div>
+
+        <button type="submit">💖 บันทึกพลังไดโมขุ</button>
+      </form>
+    </section>
+  </main>
+  
+<script>
+    const LIFF_ID = '2012309057-rGcG38Y8';
+    const OA_URL = 'https://line.me/R/ti/p/%40403maage';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyRsDkdKgH6eJGmxRqwXafGa_nq-lq75C3slo9ye7TuJOolJxSmr6qtSFXxvSDsPoTj_A/exec';
+    const views = ['loading', 'register', 'record'];
+    const $ = id => document.getElementById(id);
+    let token = '';
+
+    function show(id) { views.forEach(view => $(view).classList.toggle('hidden', view !== id)); }
+    function message(text, kind) {
+      $('message').textContent = text;
+      $('message').className = 'message ' + (kind || 'error');
+      window.scrollTo(0, 0);
+    }
+    function clearMessage() { $('message').className = 'message hidden'; }
+    
+    // เรียก Apps Script Web App ผ่าน fetch (doPost)
+    // ใช้ text/plain เพื่อเป็น "simple request" จะได้ไม่เกิด CORS preflight ที่ Apps Script ไม่รองรับ
+    async function callServer(action, accessToken, ...rest) {
+      const body = { action, accessToken };
+      if (action === 'saveProfile') body.data = rest[0];
+      if (action === 'saveLog') {
+        body.period = rest[0];
+        body.includeMorning = rest[1];
+        body.minutes = rest[2];
+      }
+      let response;
+      try {
+        response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(body)
+        });
+      } catch (e) {
+        throw new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาลองใหม่อีกครั้งนะจ๊ะ');
+      }
+      let res;
+      try {
+        res = await response.json();
+      } catch (e) {
+        throw new Error('เซิร์ฟเวอร์ตอบกลับผิดรูปแบบ (HTTP ' + response.status + ')');
+      }
+      if (!res || res.ok !== true) {
+        throw new Error((res && res.error) || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+      }
+      return res.data;
+    }
+    
+    async function refresh() {
+      clearMessage();
+      show('loading');
+      
+      // ตรวจสอบ Token ถ้าไม่มีให้บังคับล็อกอินผ่าน LINE ทันที
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+      }
+      
+      token = liff.getAccessToken();
+      if (!token) {
+        liff.login();
+        return;
+      }
+      
+      const state = await callServer('getState', token);
+      
+      if (!state.registered) {
+        $('nickname').value = state.nickname || '';
+        show('register');
+        return;
+      }
+      
+      $('welcome').textContent = 'สวัสดีจ้าน้อง ' + (state.nickname || '') + ' ✨';
+      $('week').textContent = Number(state.stats.week || 0).toLocaleString('th-TH');
+      $('month').textContent = Number(state.stats.month || 0).toLocaleString('th-TH');
+      show('record');
+    }
+
+    function failure(error) {
+      message(error && error.message ? error.message : String(error), 'error');
+    }
+    
+    async function busy(button, task) {
+      button.disabled = true;
+      try { await task(); } catch (error) { failure(error); }
+      finally { button.disabled = false; }
+    }
+
+    $('profileForm').addEventListener('submit', event => {
+      event.preventDefault();
+      busy(event.currentTarget.querySelector('button[type=submit]'), async () => {
+        const data = Object.fromEntries(new FormData(event.currentTarget));
+        await callServer('saveProfile', token, data);
+        await refresh();
+        message('สมัครสมาชิกเรียบร้อยแล้ว! มาสะสมดาวสวดมนต์กันเลย 🌟', 'success');
+      });
+    });
+    
+    $('period').addEventListener('change', () => {
+      $('morningRow').classList.toggle('hidden', $('period').value !== 'evening');
+      if ($('period').value !== 'evening') $('includeMorning').checked = false;
+    });
+    
+    $('logForm').addEventListener('submit', event => {
+      event.preventDefault();
+      busy(event.currentTarget.querySelector('button[type=submit]'), async () => {
+        const result = await callServer('saveLog', token, $('period').value,
+          $('includeMorning').checked, Number($('minutes').value));
+        $('week').textContent = Number(result.stats.week || 0).toLocaleString('th-TH');
+        $('month').textContent = Number(result.stats.month || 0).toLocaleString('th-TH');
+        event.currentTarget.reset();
+        $('morningRow').classList.add('hidden');
+        message(result.message || 'บันทึกยอดสำเร็จแล้วจ้า', 'success');
+      });
+    });
+
+    // เริ่มต้น LIFF และบังคับเช็กสถานะการล็อกอินเพื่อเด้งหน้า Login ทันทีแบบระบบที่ถูกต้อง
+    (async () => {
+      try {
+        if (!window.liff) throw new Error('ไม่สามารถโหลด LINE SDK ได้');
+
+        await liff.init({ liffId: LIFF_ID });
+
+        // หากยังไม่ได้ล็อกอิน บังคับพาไปหน้าจอ Login ของ LINE ทันทีเหมือนลิงก์ต้นแบบ
+        if (!liff.isLoggedIn()) {
+          liff.login();
+          return;
+        }
+
+        await refresh();
+      } catch (error) {
+        show('loading');
+        $('loading').innerHTML = `
+          <h2 style="color:#ff4757; margin-bottom:8px;">เชื่อมต่อไม่สำเร็จ 😿</h2>
+          <p id="loadError" style="color:#2f3542; font-size:13px; word-break:break-all; background:#fff0f0; padding:12px; border-radius:10px; border:1px solid #ff7875; text-align:left;"></p>
+          <button type="button" onclick="liff.login()" style="margin-top:12px; background:#06c755;">🟢 เข้าสู่ระบบ LINE</button>
+        `;
+        $('loadError').textContent = (error && error.message) || String(error);
+      }
+    })();
+  </script>
+  
+</body>
+</html>

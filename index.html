@@ -275,16 +275,20 @@
       }
       
       const state = await callServer('getState', token);
-      
-      if (!state.registered) {
-        $('nickname').value = state.nickname || '';
+      render(state);
+    }
+
+    // ลงทะเบียนแล้ว -> หน้ากรอกยอด / ยังไม่ลงทะเบียน -> หน้าสมัครสมาชิก
+    function render(state) {
+      if (!state || state.registered !== true) {
+        $('nickname').value = (state && state.nickname) || '';
         show('register');
         return;
       }
-      
+      const stats = state.stats || {};
       $('welcome').textContent = 'สวัสดีจ้าน้อง ' + (state.nickname || '') + ' ✨';
-      $('week').textContent = Number(state.stats.week || 0).toLocaleString('th-TH');
-      $('month').textContent = Number(state.stats.month || 0).toLocaleString('th-TH');
+      $('week').textContent = Number(stats.week || 0).toLocaleString('th-TH');
+      $('month').textContent = Number(stats.month || 0).toLocaleString('th-TH');
       show('record');
     }
 
@@ -302,8 +306,13 @@
       event.preventDefault();
       busy(event.currentTarget.querySelector('button[type=submit]'), async () => {
         const data = Object.fromEntries(new FormData(event.currentTarget));
-        await callServer('saveProfile', token, data);
-        await refresh();
+        const state = await callServer('saveProfile', token, data);
+        // ต้องยืนยันว่าเซิร์ฟเวอร์บันทึกจริง ไม่เช่นนั้นจะวนกลับหน้าสมัครโดยไม่รู้สาเหตุ
+        if (!state || state.registered !== true) {
+          throw new Error('บันทึกข้อมูลสมัครสมาชิกไม่สำเร็จ ไม่พบข้อมูลในระบบ กรุณาแจ้งผู้ดูแล');
+        }
+        clearMessage();
+        render(state);
         message('สมัครสมาชิกเรียบร้อยแล้ว! มาสะสมดาวสวดมนต์กันเลย 🌟', 'success');
       });
     });
@@ -318,6 +327,9 @@
       busy(event.currentTarget.querySelector('button[type=submit]'), async () => {
         const result = await callServer('saveLog', token, $('period').value,
           $('includeMorning').checked, Number($('minutes').value));
+        if (!result || !result.stats) {
+          throw new Error('บันทึกยอดไม่สำเร็จ ไม่ได้รับการยืนยันจากระบบ กรุณาแจ้งผู้ดูแล');
+        }
         $('week').textContent = Number(result.stats.week || 0).toLocaleString('th-TH');
         $('month').textContent = Number(result.stats.month || 0).toLocaleString('th-TH');
         event.currentTarget.reset();
